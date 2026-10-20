@@ -15,6 +15,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * Representa la asociacion entre una tarjeta y una cuenta.
+ *
+ * <p>Una misma pareja de tarjeta y cuenta no puede repetirse.</p>
+ */
 @Entity
 @Table(
         name = "tarjeta_cuenta",
@@ -25,19 +30,23 @@ import lombok.NoArgsConstructor;
                 )
         }
 )
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class CardAccount {
 
+    /** Identificador interno de la asociacion. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** Tarjeta asociada a la cuenta. */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "tarjeta_id", nullable = false)
     private Card tarjeta;
 
+    /** Cuenta asociada a la tarjeta. */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "cuenta_id", nullable = false)
     private Account cuenta;
