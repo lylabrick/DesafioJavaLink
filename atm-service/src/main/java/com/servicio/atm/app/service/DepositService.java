@@ -4,6 +4,6 @@ import java.math.BigDecimal;
 
 public interface DepositService {
 
-    BigDecimal deposit(String cardNumber, String accountNumber, BigDecimal amount);
+    BigDecimal deposit(String cardNumber, String cbu, BigDecimal amount);
 
 }

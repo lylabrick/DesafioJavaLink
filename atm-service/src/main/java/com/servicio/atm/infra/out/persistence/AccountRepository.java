@@ -1,6 +1,5 @@
 package com.servicio.atm.infra.out.persistence;
 
-
 import com.servicio.atm.domain.entity.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
@@ -15,5 +14,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select a from Account a where a.id = :id")
     Optional<Account> findByIdForUpdate(@Param("id") Long id);
-}
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select a from Account a where a.cbu = :cbu")
+    Optional<Account> findByCbuForUpdate(@Param("cbu") String cbu);
+}

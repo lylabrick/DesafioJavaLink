@@ -41,7 +41,7 @@ public class TransactionController {
     public ResponseEntity<DepositResponse> deposit(@Valid @RequestBody DepositRequest request) {
         BigDecimal balance = depositService.deposit(
                 request.getCardNumber(),
-                request.getAccountNumber(),
+                request.getCbu(),
                 request.getAmount());
 
         return ResponseEntity.ok(new DepositResponse(request.getAmount(), balance));

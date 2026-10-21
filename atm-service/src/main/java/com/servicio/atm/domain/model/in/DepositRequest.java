@@ -16,8 +16,8 @@ public class DepositRequest {
     @NotBlank(message = "El numero de tarjeta es obligatorio")
     private String cardNumber;
 
-    @NotBlank(message = "El numero de cuenta es obligatorio")
-    private String accountNumber;
+    @NotBlank(message = "El CBU es obligatorio")
+    private String cbu;
 
     @NotNull(message = "El importe es obligatorio")
     @DecimalMin(value = "0.01", message = "El importe debe ser mayor que cero")
