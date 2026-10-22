@@ -279,7 +279,3 @@ Decisiones:
 - **Mensajes de error** más precisos: separar tarjeta inexistente, cuenta no asociada y CBU
   inexistente.
 - **Límites operativos** configurables (extracción máxima diaria, por operación).
-- **Observabilidad**: métricas con Micrometer y log estructurado (JSON) para enviarlo a un sistema
-  centralizado.
-- **Alta disponibilidad**: varias instancias detrás de un balanceador, compartiendo una base con
-  bloqueo a nivel de fila.
