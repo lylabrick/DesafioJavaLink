@@ -16,23 +16,6 @@ La solución son dos proyectos Maven independientes en el mismo repositorio, com
 - **`atm-console`**: aplicación de consola en Java 8 puro que recibe un comando por línea de
   comandos, llama al servicio por HTTP y muestra el resultado.
 
-```mermaid
-flowchart LR
-    U([Usuario]) -->|atm saldo ...| C[atm-console]
-    C -->|HTTP POST JSON| CT
-
-    subgraph S[atm-service :8080]
-        CT[Controllers REST] --> SV[Servicios de aplicación]
-        SV --> D[Entidades de dominio]
-        SV --> R[Repositorios JPA]
-        SV --> TL[TransactionLogger]
-        GEH[GlobalExceptionHandler] -.-> CT
-    end
-
-    R --> DB[(H2 en memoria)]
-    TL --> LOG[[logs/transacciones.log]]
-```
-
 ## 2. Microservicio (`atm-service`)
 
 ### 2.1 Tecnología
