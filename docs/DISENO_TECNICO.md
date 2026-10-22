@@ -137,7 +137,7 @@ usuario.
 | Sin estado entre comandos | Cada invocación es un proceso nuevo y vuelve a enviar la tarjeta. `login` solo verifica la tarjeta (ver concesiones). |
 | Códigos de salida 0 / 1 | Permiten usar la consola desde scripts. Los errores van a stderr. |
 | Timeouts | 3 s para conectar y 10 s para leer. Si el servicio no responde se muestra un mensaje claro en lugar de una traza. |
-| Codificación de salida | `ConsolePrinter.forSystemStreams()` escribe con la página de códigos de la consola cuando Java 8 la soporta (por ejemplo `cp850`), y en UTF-8 si la consola está en UTF-8 (`cp65001`, que Java 8 no reconoce) o si la salida está redirigida. Así `Depósito exitoso` se ve bien en `cmd` y PowerShell. Se detectó y corrigió durante las pruebas ([hallazgo H1](EVIDENCIAS_PRUEBAS.md#hallazgos)). |
+| Codificación de salida | `ConsolePrinter.forSystemStreams()` escribe con la página de códigos de la consola cuando Java 8 la soporta (por ejemplo `cp850`), y en UTF-8 si la consola está en UTF-8 (`cp65001`, que Java 8 no reconoce) o si la salida está redirigida. Así `Depósito exitoso` se ve bien en `cmd`. Se detectó y corrigió durante las pruebas ([hallazgo H1](EVIDENCIAS_PRUEBAS.md#hallazgos)). |
 | Formato `$ 99999,99` | `AmountFormatter` usa coma decimal y 2 decimales, como el ejemplo del enunciado. |
 
 ## 4. Cumplimiento de requisitos funcionales
@@ -208,10 +208,10 @@ leerse a simple vista y procesarse con herramientas de texto:
 Ejemplo real de la corrida de pruebas:
 
 ```
-2026-10-21 22:03:19.194 | tipo=EXTRACCION tarjeta=****3333 cuenta=0000000001 importe=300.00 resultado=OK
-2026-10-21 22:03:20.024 | tipo=EXTRACCION tarjeta=****3333 cuenta=0000000001 importe=5000.00 resultado=RECHAZADA(SaldoInsuficienteException)
-2026-10-21 22:03:24.510 | tipo=DEPOSITO tarjeta=****3333 cuenta=0170000000000000000002 importe=100.00 resultado=OK
-2026-10-21 22:03:25.342 | tipo=DEPOSITO tarjeta=****7777 cuenta=0170000000000000000001 importe=100.00 resultado=RECHAZADA(TarjetaInactivaException)
+2026-10-22 01:06:15.049 | tipo=EXTRACCION tarjeta=****3333 cuenta=0000000001 importe=300.00 resultado=OK
+2026-10-22 01:06:15.820 | tipo=EXTRACCION tarjeta=****3333 cuenta=0000000001 importe=5000.00 resultado=RECHAZADA(SaldoInsuficienteException)
+2026-10-22 01:06:19.976 | tipo=DEPOSITO tarjeta=****3333 cuenta=0170000000000000000002 importe=100.00 resultado=OK
+2026-10-22 01:06:20.768 | tipo=DEPOSITO tarjeta=****7777 cuenta=0170000000000000000001 importe=100.00 resultado=RECHAZADA(TarjetaInactivaException)
 ```
 
 Decisiones:

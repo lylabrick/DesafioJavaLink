@@ -86,8 +86,8 @@ directorio desde donde se lanza el servicio. Rota diariamente a `transacciones.A
 conserva 90 días.
 
 ```
-2026-10-21 22:03:19.194 | tipo=EXTRACCION tarjeta=****3333 cuenta=0000000001 importe=300.00 resultado=OK
-2026-10-21 22:03:20.024 | tipo=EXTRACCION tarjeta=****3333 cuenta=0000000001 importe=5000.00 resultado=RECHAZADA(SaldoInsuficienteException)
+2026-10-22 01:06:15.049 | tipo=EXTRACCION tarjeta=****3333 cuenta=0000000001 importe=300.00 resultado=OK
+2026-10-22 01:06:15.820 | tipo=EXTRACCION tarjeta=****3333 cuenta=0000000001 importe=5000.00 resultado=RECHAZADA(SaldoInsuficienteException)
 ```
 
 ## 3. Ejecutar la aplicación de consola

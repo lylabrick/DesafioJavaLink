@@ -1,7 +1,7 @@
 # Evidencias de pruebas – Producto ATM
 
 Este documento reúne los resultados de las pruebas que validan el proyecto. Todas las salidas son
-reales, de la corrida del **21/10/2026**.
+reales, de la corrida del **22/10/2026**.
 
 1. [Entorno](#1-entorno)
 2. [Tests automatizados](#2-tests-automatizados)
@@ -191,57 +191,44 @@ Comandos disponibles:
 
 **Resultado: 32 de 32 escenarios con el comportamiento esperado.**
 
-### 3.8 Acentos en distintas terminales de Windows
+### 3.8 Acentos en la consola de Windows (`cmd`)
 
-Se ejecutó `atm depositar 4000111122223333 0170000000000000000007 0.01` (cuenta de Elena) en
-distintas terminales para verificar que `Depósito exitoso` se vea correctamente (ver
+Se ejecutó `atm depositar 4000111122223333 0170000000000000000007 0.01` (cuenta de Elena) en `cmd`, con
+distintas páginas de códigos, para verificar que `Depósito exitoso` se vea correctamente (ver
 [hallazgo H1](#hallazgos)):
 
-| Terminal | Página de códigos | Cómo se recibe la salida | Antes de la corrección | Después |
-|---|---|---|---|---|
-| `cmd` | 850 | Consola | — | `Depósito exitoso` ✅ |
-| PowerShell | 850 | Consola | — | `Depósito exitoso` ✅ |
-| `cmd` | 65001 (UTF-8) | Consola | — | `Depósito exitoso` ✅ |
-| PowerShell | 65001 (UTF-8) | Consola | — | `Depósito exitoso` ✅ |
-| PowerShell (`OutputEncoding` UTF-8) | — | Capturada en una variable | `Dep�sito exitoso` | `Depósito exitoso` ✅ |
-| `cmd` | — | Redirigida a archivo, leído como UTF-8 | — | `Depósito exitoso` ✅ |
-| Bash (Git for Windows) | — | Pipe | `Dep�sito exitoso` | `Depósito exitoso` ✅ |
+| Página de códigos de `cmd` | Cómo se recibe la salida | Resultado |
+|---|---|---|
+| 850 | Consola | `Depósito exitoso` ✅ |
+| 65001 (UTF-8) | Consola | `Depósito exitoso` ✅ |
+| Cualquiera | Redirigida a un archivo, leído como UTF-8 | `Depósito exitoso` ✅ |
 
-"—" indica que ese caso no se probó antes de la corrección. En una consola real, Java 8 informa la
-página de códigos (`sun.stdout.encoding` = `cp850` o `cp65001`). Con 850 ya se veía bien; con 65001,
-Java 8 no reconoce `cp65001` y usaba Cp1252.
-
-Cuando la salida se captura o redirige, la consola no informa ninguna codificación y la aplicación
-escribe en UTF-8. Si quien la captura decodifica con otra página de códigos (por ejemplo, PowerShell
-con `[Console]::OutputEncoding` en 850), la "ó" se verá mal. Esa decodificación depende de quien
-captura la salida, no de la aplicación.
+En una consola real, Java 8 informa la página de códigos (`sun.stdout.encoding` = `cp850` o `cp65001`).
+Con 65001, Java 8 no reconoce `cp65001` y antes escribía con Cp1252, por lo que la "ó" se veía mal;
+ahora usa UTF-8 en ese caso.
 
 ## 4. Log transaccional generado
 
 Contenido de `atm-service/logs/transacciones.log` al terminar la corrida, completo y sin editar:
 
 ```
-2026-10-21 22:10:53.813 | tipo=LOGIN tarjeta=****3333 resultado=EXITOSO
-2026-10-21 22:10:54.275 | tipo=LOGIN tarjeta=****7777 resultado=NO_EXITOSO
-2026-10-21 22:10:54.978 | tipo=LOGIN tarjeta=****0000 resultado=NO_EXITOSO
-2026-10-21 22:10:57.386 | tipo=EXTRACCION tarjeta=****3333 cuenta=0000000001 importe=300.00 resultado=OK
-2026-10-21 22:10:58.267 | tipo=EXTRACCION tarjeta=****3333 cuenta=0000000001 importe=5000.00 resultado=RECHAZADA(SaldoInsuficienteException)
-2026-10-21 22:10:58.688 | tipo=EXTRACCION tarjeta=****8888 cuenta=0000000008 importe=10.00 resultado=OK
-2026-10-21 22:10:59.598 | tipo=EXTRACCION tarjeta=****7777 cuenta=0000000003 importe=10.00 resultado=RECHAZADA(TarjetaInactivaException)
-2026-10-21 22:11:00.213 | tipo=EXTRACCION tarjeta=****0000 cuenta=0000000001 importe=10.00 resultado=RECHAZADA(CuentaNoEncontradaException)
-2026-10-21 22:11:01.864 | tipo=EXTRACCION tarjeta=****3333 cuenta=0000000004 importe=1.25 resultado=OK
-2026-10-21 22:11:02.307 | tipo=DEPOSITO tarjeta=****3333 cuenta=0170000000000000000004 importe=250.50 resultado=OK
-2026-10-21 22:11:03.121 | tipo=DEPOSITO tarjeta=****3333 cuenta=0170000000000000000002 importe=100.00 resultado=OK
-2026-10-21 22:11:03.931 | tipo=DEPOSITO tarjeta=****7777 cuenta=0170000000000000000001 importe=100.00 resultado=RECHAZADA(TarjetaInactivaException)
-2026-10-21 22:11:04.347 | tipo=DEPOSITO tarjeta=****0000 cuenta=0170000000000000000001 importe=100.00 resultado=RECHAZADA(TarjetaNoEncontradaException)
-2026-10-21 22:11:04.740 | tipo=DEPOSITO tarjeta=****3333 cuenta=0170000000000000000099 importe=100.00 resultado=RECHAZADA(CuentaNoEncontradaException)
-2026-10-21 22:11:19.587 | tipo=DEPOSITO tarjeta=****3333 cuenta=0170000000000000000007 importe=0.01 resultado=OK
-2026-10-21 22:11:19.978 | tipo=DEPOSITO tarjeta=****3333 cuenta=0170000000000000000007 importe=0.01 resultado=OK
-2026-10-21 22:11:20.405 | tipo=DEPOSITO tarjeta=****3333 cuenta=0170000000000000000007 importe=0.01 resultado=OK
-2026-10-21 22:11:20.773 | tipo=DEPOSITO tarjeta=****3333 cuenta=0170000000000000000007 importe=0.01 resultado=OK
-2026-10-21 22:11:21.131 | tipo=DEPOSITO tarjeta=****3333 cuenta=0170000000000000000007 importe=0.01 resultado=OK
-2026-10-21 22:11:29.408 | tipo=DEPOSITO tarjeta=****3333 cuenta=0170000000000000000007 importe=0.01 resultado=OK
-2026-10-21 22:11:29.783 | tipo=DEPOSITO tarjeta=****3333 cuenta=0170000000000000000007 importe=0.01 resultado=OK
+2026-10-22 01:06:12.225 | tipo=LOGIN tarjeta=****3333 resultado=EXITOSO
+2026-10-22 01:06:12.621 | tipo=LOGIN tarjeta=****7777 resultado=NO_EXITOSO
+2026-10-22 01:06:13.025 | tipo=LOGIN tarjeta=****0000 resultado=NO_EXITOSO
+2026-10-22 01:06:15.049 | tipo=EXTRACCION tarjeta=****3333 cuenta=0000000001 importe=300.00 resultado=OK
+2026-10-22 01:06:15.820 | tipo=EXTRACCION tarjeta=****3333 cuenta=0000000001 importe=5000.00 resultado=RECHAZADA(SaldoInsuficienteException)
+2026-10-22 01:06:16.211 | tipo=EXTRACCION tarjeta=****8888 cuenta=0000000008 importe=10.00 resultado=OK
+2026-10-22 01:06:16.967 | tipo=EXTRACCION tarjeta=****7777 cuenta=0000000003 importe=10.00 resultado=RECHAZADA(TarjetaInactivaException)
+2026-10-22 01:06:17.364 | tipo=EXTRACCION tarjeta=****0000 cuenta=0000000001 importe=10.00 resultado=RECHAZADA(CuentaNoEncontradaException)
+2026-10-22 01:06:18.812 | tipo=EXTRACCION tarjeta=****3333 cuenta=0000000004 importe=1.25 resultado=OK
+2026-10-22 01:06:19.210 | tipo=DEPOSITO tarjeta=****3333 cuenta=0170000000000000000004 importe=250.50 resultado=OK
+2026-10-22 01:06:19.976 | tipo=DEPOSITO tarjeta=****3333 cuenta=0170000000000000000002 importe=100.00 resultado=OK
+2026-10-22 01:06:20.768 | tipo=DEPOSITO tarjeta=****7777 cuenta=0170000000000000000001 importe=100.00 resultado=RECHAZADA(TarjetaInactivaException)
+2026-10-22 01:06:21.156 | tipo=DEPOSITO tarjeta=****0000 cuenta=0170000000000000000001 importe=100.00 resultado=RECHAZADA(TarjetaNoEncontradaException)
+2026-10-22 01:06:21.547 | tipo=DEPOSITO tarjeta=****3333 cuenta=0170000000000000000099 importe=100.00 resultado=RECHAZADA(CuentaNoEncontradaException)
+2026-10-22 01:06:41.039 | tipo=DEPOSITO tarjeta=****3333 cuenta=0170000000000000000007 importe=0.01 resultado=OK
+2026-10-22 01:06:41.455 | tipo=DEPOSITO tarjeta=****3333 cuenta=0170000000000000000007 importe=0.01 resultado=OK
+2026-10-22 01:06:41.871 | tipo=DEPOSITO tarjeta=****3333 cuenta=0170000000000000000007 importe=0.01 resultado=OK
 ```
 
 Qué se verifica:
@@ -254,9 +241,9 @@ Qué se verifica:
 - Los importes inválidos (E18–E21) no aparecen, porque los rechaza la consola antes de llamar al
   servicio.
 - La consulta de saldo no se registra (ver [concesiones](DISENO_TECNICO.md#6-concesiones-y-decisiones-ante-falta-de-especificación)).
-- Las siete últimas líneas (depósitos de 0,01 a la cuenta 7) corresponden a las pruebas de
-  [3.8](#38-acentos-en-distintas-terminales-de-windows). El saldo de esa cuenta, consultado al final
-  por la API, es `1000000.06` = 999999,99 + 7 × 0,01.
+- Las tres últimas líneas (depósitos de 0,01 a la cuenta 7) corresponden a las pruebas de
+  [3.8](#38-acentos-en-la-consola-de-windows-cmd). El saldo de esa cuenta, consultado al final
+  por la API, es `1000000.02` = 999999,99 + 3 × 0,01.
 
 ## 5. Pruebas directas sobre la API
 
@@ -276,5 +263,5 @@ también los valida por su cuenta:
 
 | Id | Descripción | Impacto | Estado |
 |---|---|---|---|
-| H1 | `Depósito exitoso` se mostraba como `Dep�sito exitoso` cuando la salida se capturaba o redirigía (PowerShell, Bash). Lo mismo ocurre en consolas con página de códigos UTF-8 (65001), porque Java 8 no reconoce `cp65001`. En esos casos la aplicación escribía con la codificación por defecto del sistema (Cp1252). | Solo visual: el depósito se realizaba y el código de salida era 0. | **Corregido.** `ConsolePrinter.forSystemStreams()` usa la codificación de la consola cuando Java la soporta y UTF-8 en los demás casos. Cubierto por `ConsolePrinterTest` y verificado en [3.8](#38-acentos-en-distintas-terminales-de-windows); la corrida E2E completa se repitió después de la corrección. |
+| H1 | `Depósito exitoso` se mostraba como `Dep�sito exitoso` cuando la salida se redirigía y en consolas con página de códigos UTF-8 (65001), porque Java 8 no reconoce `cp65001`. En esos casos la aplicación escribía con la codificación por defecto del sistema (Cp1252). | Solo visual: el depósito se realizaba y el código de salida era 0. | **Corregido.** `ConsolePrinter.forSystemStreams()` usa la codificación de la consola cuando Java la soporta y UTF-8 en los demás casos. Cubierto por `ConsolePrinterTest` y verificado en [3.8](#38-acentos-en-la-consola-de-windows-cmd); la corrida E2E completa se repitió después de la corrección. |
 | H2 | Con tarjeta inexistente, `depositar` responde `Tarjeta no encontrada` y `extraer` / `saldo` responden `Cuenta no encontrada para la tarjeta indicada`. El CBU inexistente también responde con el mensaje de "tarjeta". | Mensajes inconsistentes; el comportamiento es correcto (rechaza y no modifica saldos). | Documentado como concesión y mejora propuesta. |
