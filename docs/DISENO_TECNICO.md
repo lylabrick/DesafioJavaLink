@@ -262,8 +262,19 @@ Decisiones:
 
 - **Base persistente** (PostgreSQL, por ejemplo) y una **tabla de movimientos** como ledger contable,
   escrita en la misma transacción que el saldo. El archivo de texto quedaría como copia de auditoría.
-- **Idempotencia** de extracciones y depósitos con un identificador de operación enviado por el
-  cliente, para que un reintento por timeout no duplique el movimiento.
+- **Idempotencia y protección contra operaciones duplicadas**. Hoy cada llamada a `extraer` o
+  `depositar` se procesa como una operación nueva, así que un reintento o un comando repetido por
+  error mueve dinero dos veces. Se proponen dos mecanismos complementarios:
+  - *Clave de idempotencia*: la consola genera un identificador único por operación y lo envía en un
+    header (`Idempotency-Key`), reutilizándolo si reintenta por timeout o corte de red. El servicio
+    guarda la clave junto con el resultado, en la misma transacción que el movimiento, y ante una
+    clave repetida devuelve la respuesta original sin volver a debitar o acreditar. Cubre los
+    reintentos automáticos.
+  - *Detección de duplicados*: como cada ejecución de la consola es un proceso nuevo, un comando
+    repetido por error llega con otra clave. Para ese caso, el servicio rechazaría (o pediría
+    confirmar) una operación idéntica (misma tarjeta, cuenta o CBU e importe) dentro de una ventana
+    corta configurable, y lo registraría en el log como `RECHAZADA(OperacionDuplicada)`.
+    Alternativamente, la consola podría pedir confirmación antes de operar.
 - **Autenticación** con PIN y token de sesión de corta duración, y HTTPS.
 - **Mensajes de error** más precisos: separar tarjeta inexistente, cuenta no asociada y CBU
   inexistente.
