@@ -1,13 +1,32 @@
 package com.console.atm;
 
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+import com.console.atm.cli.BalanceCommand;
+import com.console.atm.cli.Command;
+import com.console.atm.cli.CommandDispatcher;
+import com.console.atm.cli.ConsolePrinter;
+import com.console.atm.cli.DepositCommand;
+import com.console.atm.cli.ExtractCommand;
+import com.console.atm.cli.LoginCommand;
+import com.console.atm.client.AtmClient;
+import com.console.atm.client.HttpAtmClient;
+import com.console.atm.config.AtmConfig;
+
+import java.util.Arrays;
+import java.util.List;
+
+/** Punto de entrada de la aplicacion de consola del cajero automatico. */
+public class App {
+
+    public static void main(String[] args) {
+        ConsolePrinter printer = ConsolePrinter.forSystemStreams();
+        AtmClient client = new HttpAtmClient(AtmConfig.fromEnvironment());
+
+        List<Command> commands = Arrays.asList(
+                new LoginCommand(client, printer),
+                new ExtractCommand(client, printer),
+                new DepositCommand(client, printer),
+                new BalanceCommand(client, printer));
+
+        System.exit(new CommandDispatcher(commands, printer).dispatch(args));
     }
 }
