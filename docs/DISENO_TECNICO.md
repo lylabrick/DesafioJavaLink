@@ -262,3 +262,8 @@ Decisiones:
 - **Mensajes de error** más precisos: separar tarjeta inexistente, cuenta no asociada y CBU
   inexistente.
 - **Límites operativos** configurables (extracción máxima diaria, por operación).
+- **Medición de cobertura con JaCoCo**. Hoy se informa cuántos tests hay y que pasan, pero no qué
+  parte del código ejercitan. Se propone agregar el plugin `jacoco-maven-plugin` a ambos proyectos
+  para generar el reporte de cobertura (`target/site/jacoco/index.html`) al correr `mvn verify`, y
+  fijar un umbral mínimo (por ejemplo, 80 % de líneas en servicios y dominio) que haga fallar la
+  compilación si baja. El reporte se enlazaría desde el documento de evidencias.
