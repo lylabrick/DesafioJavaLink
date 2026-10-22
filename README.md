@@ -136,14 +136,6 @@ atm extraer 4000111122223333 0000000001 300
 atm depositar 4000111122223333 0170000000000000000002 100
 ```
 
-### Problemas frecuentes
-
-| Mensaje | Causa y solución |
-|---|---|
-| `'java' is not recognized...` | `java` no está en el `PATH` de esa ventana. Agregá la carpeta `bin` del JDK 8 con `set PATH=C:\ruta\al\jdk8\bin;%PATH%` y verificá con `java -version`. |
-| `Unable to access jarfile ...atm-console.jar` | Falta generar el JAR: `mvn clean package` en `atm-console`. |
-| `No se pudo conectar con el servicio ATM en ...` | El servicio no está levantado. |
-
 ## 4. Probar
 
 Tests automatizados de cada proyecto:
