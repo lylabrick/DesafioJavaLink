@@ -102,7 +102,7 @@ Procedimiento:
 1. Compilar ambos proyectos (`mvn clean package`).
 2. Levantar el servicio con `java -jar target/atm-service-0.0.1-SNAPSHOT.jar`. Arrancó en 6 s:
    `Tomcat started on port(s): 8080` y `/actuator/health` → `{"status":"UP"}`.
-3. Ejecutar cada escenario con `atm.bat` y registrar la salida (stdout + stderr) y el código de
+3. Ejecutar cada escenario con el wrapper `atm.bat` (en las tablas, `atm` abrevia esa invocación) y registrar la salida (stdout + stderr) y el código de
    salida.
 
 Los escenarios se ejecutaron en este orden sobre los [datos iniciales](../README.md#datos-de-prueba),

@@ -8,21 +8,33 @@ Las instrucciones de compilación, ejecución y prueba, junto con los datos de p
 
 ## Uso rápido
 
+Desde esta carpeta, en PowerShell o `cmd`:
+
 ```
-atm login <tarjeta>
-atm extraer <tarjeta> <cuenta> <importe>
-atm depositar <tarjeta> <cbu> <importe>
-atm saldo <tarjeta> <cuenta>
+.\atm.bat login <tarjeta>
+.\atm.bat extraer <tarjeta> <cuenta> <importe>
+.\atm.bat depositar <tarjeta> <cbu> <importe>
+.\atm.bat saldo <tarjeta> <cuenta>
 ```
 
-En Windows se usa `atm.bat`; en Linux/macOS, `./atm.sh`. También se puede llamar directamente:
-`java -jar target/atm-console.jar <comando> ...`
+En Git Bash o Linux/macOS se reemplaza `.\atm.bat` por `./atm.sh`. Resumen por terminal:
+
+| Terminal | Cómo se invoca |
+|---|---|
+| PowerShell o `cmd` | `.\atm.bat login <tarjeta>` |
+| Git Bash | `./atm.bat login <tarjeta>` o `./atm.sh login <tarjeta>` |
+| Linux / macOS | `./atm.sh login <tarjeta>` |
+| Cualquiera | `java -jar target/atm-console.jar login <tarjeta>` |
+
+Más detalle y problemas frecuentes en el [README del repositorio](../README.md#3-ejecutar-la-aplicación-de-consola).
 
 ## Configuración
 
 | Variable | Descripción | Valor por defecto |
 |---|---|---|
 | `ATM_BASE_URL` | URL base del servicio | `http://localhost:8080` |
+
+La sintaxis para definirla en cada terminal está en el [README del repositorio](../README.md#3-ejecutar-la-aplicación-de-consola).
 
 Los tiempos de espera son 3 s para conectar y 10 s para leer la respuesta.
 

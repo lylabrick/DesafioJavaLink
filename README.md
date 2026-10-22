@@ -6,7 +6,7 @@ para identificarse, extraer, depositar y consultar saldo.
 | Proyecto | Descripción | Tecnología |
 |---|---|---|
 | [`atm-service`](atm-service) | Microservicio REST con las operaciones y el log transaccional | Java 8, Spring Boot 2.7.18, H2 en memoria |
-| [`atm-console`](atm-console) | Aplicación de consola (`atm <comando> ...`) | Java 8, `HttpURLConnection` + Jackson |
+| [`atm-console`](atm-console) | Aplicación de consola (`login`, `extraer`, `depositar`, `saldo`) | Java 8, `HttpURLConnection` + Jackson |
 
 Documentación:
 
@@ -92,32 +92,43 @@ conserva 90 días.
 
 ## 3. Ejecutar la aplicación de consola
 
-Con el servicio levantado, desde la carpeta `atm-console`:
+Con el servicio levantado, desde la carpeta `atm-console` (el JAR debe estar generado, ver el paso 1).
+Cada terminal invoca el wrapper de forma distinta:
 
-```bash
-atm.bat login 4000111122223333
-```
+| Terminal | Cómo se invoca | Ejemplo |
+|---|---|---|
+| PowerShell | `.\atm.bat` | `.\atm.bat login 4000111122223333` |
+| `cmd` | `.\atm.bat` | `.\atm.bat login 4000111122223333` |
+| Git Bash | `./atm.bat` o `./atm.sh` | `./atm.bat login 4000111122223333` |
+| Linux / macOS | `./atm.sh` | `./atm.sh login 4000111122223333` |
+| Cualquiera | `java -jar target/atm-console.jar` | `java -jar target/atm-console.jar login 4000111122223333` |
 
-En Linux o macOS se usa `./atm.sh`; en cualquier sistema también funciona
-`java -jar target/atm-console.jar <comando> ...`.
+Notas:
+
+- PowerShell no ejecuta programas de la carpeta actual si no se escriben con `.\`, y `cmd` no acepta
+  `./atm.bat` (barra común). Por eso en PowerShell y `cmd` se usa la barra invertida.
+- Los comandos de abajo están escritos para PowerShell y `cmd`. En Git Bash o Linux/macOS se
+  reemplaza `.\atm.bat` por `./atm.sh`.
 
 | Comando | Uso | Salida si la operación es exitosa |
 |---|---|---|
-| Identificarse | `atm login <tarjeta>` | `Ingreso exitoso` (si no: `Ingreso no exitoso`) |
-| Extraer | `atm extraer <tarjeta> <cuenta> <importe>` | `Retire su dinero` |
-| Depositar | `atm depositar <tarjeta> <cbu> <importe>` | `Depósito exitoso` |
-| Consultar saldo | `atm saldo <tarjeta> <cuenta>` | `Su saldo es $ 99999,99` |
+| Identificarse | `.\atm.bat login <tarjeta>` | `Ingreso exitoso` (si no: `Ingreso no exitoso`) |
+| Extraer | `.\atm.bat extraer <tarjeta> <cuenta> <importe>` | `Retire su dinero` |
+| Depositar | `.\atm.bat depositar <tarjeta> <cbu> <importe>` | `Depósito exitoso` |
+| Consultar saldo | `.\atm.bat saldo <tarjeta> <cuenta>` | `Su saldo es $ 99999,99` |
 
 - El importe acepta `.` o `,` como separador decimal y hasta 2 decimales (`1500`, `1500.50`, `1500,5`).
 - `depositar` acredita en la cuenta del CBU indicado, sea o no del titular de la tarjeta.
 - Los errores se imprimen por stderr. El código de salida es `0` si la operación fue exitosa y `1` en
   cualquier otro caso.
 - La URL del servicio se cambia con la variable de entorno `ATM_BASE_URL` (por defecto
-  `http://localhost:8080`):
+  `http://localhost:8080`). Vale solo para la terminal donde se define:
 
-  ```powershell
-  $env:ATM_BASE_URL = "http://localhost:9090"
-  ```
+  | Terminal | Comando |
+  |---|---|
+  | PowerShell | `$env:ATM_BASE_URL = "http://localhost:9090"` |
+  | `cmd` | `set ATM_BASE_URL=http://localhost:9090` |
+  | Git Bash / Linux / macOS | `export ATM_BASE_URL=http://localhost:9090` |
 
 ### Datos de prueba
 
@@ -134,19 +145,29 @@ Cargados por [`data.sql`](atm-service/src/main/resources/data.sql):
 | Diego | `4000222233334444` | Sí | `0000000006` | `0170000000000000000006` | 120,40 |
 | Elena | `4000666677778888` | Sí | `0000000007` | `0170000000000000000007` | 999999,99 |
 
-Ejemplos:
+Ejemplos (PowerShell o `cmd`; en Git Bash o Linux usá `./atm.sh`):
 
-```bash
-atm.bat saldo 4000111122223333 0000000001
+```
+.\atm.bat saldo 4000111122223333 0000000001
 ```
 
-```bash
-atm.bat extraer 4000111122223333 0000000001 300
+```
+.\atm.bat extraer 4000111122223333 0000000001 300
 ```
 
-```bash
-atm.bat depositar 4000111122223333 0170000000000000000002 100
 ```
+.\atm.bat depositar 4000111122223333 0170000000000000000002 100
+```
+
+### Problemas frecuentes
+
+| Mensaje | Causa y solución |
+|---|---|
+| `'java' is not recognized...` (`cmd`/PowerShell) o `java: command not found` (Git Bash) | `java` no está en el `PATH` de esa terminal. Agregá la carpeta `bin` del JDK 8, solo para esa ventana: PowerShell `$env:Path = "C:\ruta\al\jdk8\bin;" + $env:Path`, `cmd` `set PATH=C:\ruta\al\jdk8\bin;%PATH%`, Git Bash `export PATH="/c/ruta/al/jdk8/bin:$PATH"`. Verificá con `java -version`. |
+| `The term 'atm.bat' is not recognized` (PowerShell) | Falta el prefijo: usá `.\atm.bat`. |
+| `'.' is not recognized as an internal or external command` (`cmd`) | `cmd` no acepta `./atm.bat`: usá `.\atm.bat`. |
+| `Unable to access jarfile ...atm-console.jar` | Falta generar el JAR: `mvn clean package` en `atm-console`. |
+| `No se pudo conectar con el servicio ATM en ...` | El servicio no está levantado o `ATM_BASE_URL` apunta a otra URL. |
 
 ## 4. Probar
 
