@@ -1,42 +1,21 @@
 # atm-console
 
 Aplicación de consola del cajero automático. Consume por HTTP el microservicio
-[`atm-service`](../atm-service).
+[`atm-service`](../atm-service), que debe estar en ejecución en `localhost:8080`.
 
 Las instrucciones de compilación, ejecución y prueba, junto con los datos de prueba, están en el
 [README del repositorio](../README.md).
 
-## Uso rápido
+## Uso
 
-Desde esta carpeta, en PowerShell o `cmd`:
+Desde esta carpeta, en `cmd`:
 
 ```
-.\atm.bat login <tarjeta>
-.\atm.bat extraer <tarjeta> <cuenta> <importe>
-.\atm.bat depositar <tarjeta> <cbu> <importe>
-.\atm.bat saldo <tarjeta> <cuenta>
+atm login <tarjeta>
+atm extraer <tarjeta> <cuenta> <importe>
+atm depositar <tarjeta> <cbu> <importe>
+atm saldo <tarjeta> <cuenta>
 ```
-
-En Git Bash se reemplaza `.\atm.bat` por `./atm.bat`. Resumen por terminal:
-
-| Terminal | Cómo se invoca |
-|---|---|
-| PowerShell | `.\atm.bat login <tarjeta>` |
-| `cmd` | `atm login <tarjeta>` o `.\atm.bat login <tarjeta>` |
-| Git Bash | `./atm.bat login <tarjeta>` |
-| Cualquiera | `java -jar target/atm-console.jar login <tarjeta>` |
-
-Más detalle y problemas frecuentes en el [README del repositorio](../README.md#3-ejecutar-la-aplicación-de-consola).
-
-## Configuración
-
-| Variable | Descripción | Valor por defecto |
-|---|---|---|
-| `ATM_BASE_URL` | URL base del servicio | `http://localhost:8080` |
-
-La sintaxis para definirla en cada terminal está en el [README del repositorio](../README.md#3-ejecutar-la-aplicación-de-consola).
-
-Los tiempos de espera son 3 s para conectar y 10 s para leer la respuesta.
 
 ## Estructura
 

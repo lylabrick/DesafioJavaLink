@@ -102,8 +102,8 @@ Procedimiento:
 1. Compilar ambos proyectos (`mvn clean package`).
 2. Levantar el servicio con `java -jar target/atm-service-0.0.1-SNAPSHOT.jar`. Arrancó en 6 s:
    `Tomcat started on port(s): 8080` y `/actuator/health` → `{"status":"UP"}`.
-3. Ejecutar cada escenario con el wrapper `atm.bat` (en las tablas, `atm` abrevia esa invocación) y registrar la salida (stdout + stderr) y el código de
-   salida.
+3. Ejecutar cada escenario con `atm <comando>` desde `cmd`, en la carpeta `atm-console`, y registrar la salida
+   (stdout + stderr) y el código de salida.
 
 Los escenarios se ejecutaron en este orden sobre los [datos iniciales](../README.md#datos-de-prueba),
 así que los saldos de cada paso reflejan las operaciones anteriores.
@@ -187,7 +187,7 @@ Comandos disponibles:
 
 | # | Comando | Esperado | Salida | Exit | Resultado |
 |---|---|---|---|---|---|
-| E32 | `atm login 4000111122223333` con `ATM_BASE_URL=http://localhost:9999` | Mensaje claro, sin traza | `Error: No se pudo conectar con el servicio ATM en http://localhost:9999. Verifique que el servicio este en ejecucion.` | 1 | ✅ |
+| E32 | `atm login 4000111122223333` con `atm-service` detenido | Mensaje claro, sin traza | `Error: No se pudo conectar con el servicio ATM en http://localhost:8080. Verifique que el servicio este en ejecucion.` | 1 | ✅ |
 
 **Resultado: 32 de 32 escenarios con el comportamiento esperado.**
 

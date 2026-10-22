@@ -133,10 +133,10 @@ usuario.
 | `HttpURLConnection` | Cliente HTTP del JDK 8; evita sumar una librería para cuatro llamadas POST. |
 | Patrón Command + `CommandDispatcher` | Cada operación es una clase (`LoginCommand`, `ExtractCommand`, `DepositCommand`, `BalanceCommand`) con nombre, uso y cantidad de argumentos. El dispatcher valida los argumentos, ejecuta y traduce excepciones a mensajes y códigos de salida. Agregar una operación es agregar una clase. |
 | Interfaz `AtmClient` | Los comandos dependen de la interfaz y no de HTTP, así que se prueban con mocks. `HttpAtmClient` se prueba contra un servidor HTTP embebido. |
-| Fat JAR (maven-shade) + `atm.bat` / `atm.sh` | Se ejecuta como `atm <comando> ...`, que coincide con el `nombre_aplicación <comando>` del enunciado. |
+| Fat JAR (maven-shade) + `atm.bat` | Se ejecuta como `atm <comando> ...`, que coincide con el `nombre_aplicación <comando>` del enunciado. |
 | Sin estado entre comandos | Cada invocación es un proceso nuevo y vuelve a enviar la tarjeta. `login` solo verifica la tarjeta (ver concesiones). |
 | Códigos de salida 0 / 1 | Permiten usar la consola desde scripts. Los errores van a stderr. |
-| `ATM_BASE_URL` y timeouts | URL configurable por variable de entorno; timeouts de 3 s para conectar y 10 s para leer. Si el servicio no responde se muestra un mensaje claro en lugar de una traza. |
+| Timeouts | 3 s para conectar y 10 s para leer. Si el servicio no responde se muestra un mensaje claro en lugar de una traza. |
 | Codificación de salida | `ConsolePrinter.forSystemStreams()` escribe con la página de códigos de la consola cuando Java 8 la soporta (por ejemplo `cp850`), y en UTF-8 si la consola está en UTF-8 (`cp65001`, que Java 8 no reconoce) o si la salida está redirigida. Así `Depósito exitoso` se ve bien en `cmd` y PowerShell. Se detectó y corrigió durante las pruebas ([hallazgo H1](EVIDENCIAS_PRUEBAS.md#hallazgos)). |
 | Formato `$ 99999,99` | `AmountFormatter` usa coma decimal y 2 decimales, como el ejemplo del enunciado. |
 

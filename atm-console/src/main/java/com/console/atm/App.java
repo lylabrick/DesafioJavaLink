@@ -19,7 +19,7 @@ public class App {
 
     public static void main(String[] args) {
         ConsolePrinter printer = ConsolePrinter.forSystemStreams();
-        AtmClient client = new HttpAtmClient(AtmConfig.fromEnvironment());
+        AtmClient client = new HttpAtmClient(AtmConfig.defaults());
 
         List<Command> commands = Arrays.asList(
                 new LoginCommand(client, printer),
