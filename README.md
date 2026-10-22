@@ -160,17 +160,28 @@ están en [EVIDENCIAS_PRUEBAS.md](docs/EVIDENCIAS_PRUEBAS.md).
 
 ### Cobertura de código (JaCoCo)
 
-`atm-service` mide la cobertura de sus tests con JaCoCo. Para generar el reporte:
+Ambos proyectos miden la cobertura de sus tests con JaCoCo. Para generar el reporte de cada uno:
 
 ```bash
 cd atm-service
 mvn clean verify
 ```
 
-y abrir `atm-service/target/site/jacoco/index.html` en el navegador. Cobertura actual: 98,5 % de
-líneas y 100 % de ramas ([detalle](docs/EVIDENCIAS_PRUEBAS.md#24-cobertura-de-código-jacoco)). El
-reporte se genera en la fase `verify`, por lo que `mvn test` o `mvn package` no lo producen.
-`atm-console` no mide cobertura.
+```bash
+cd atm-console
+mvn clean verify
+```
+
+y abrir `target/site/jacoco/index.html` de la carpeta correspondiente en el navegador. El reporte se
+genera en la fase `verify`, por lo que `mvn test` o `mvn package` no lo producen.
+
+| Proyecto | Líneas | Ramas | Clases excluidas del cálculo |
+|---|---|---|---|
+| `atm-service` | 100 % (134/134) | 100 % (22/22) | `AtmServiceApplication` |
+| `atm-console` | 94,1 % (96/102) | 100 % (28/28) | paquetes `client` y `config`, y `App` |
+
+Las exclusiones están en la sección `excludes` del plugin en cada `pom.xml`. El detalle por paquete
+está en [EVIDENCIAS_PRUEBAS.md](docs/EVIDENCIAS_PRUEBAS.md#24-cobertura-de-código-jacoco).
 
 ## Estructura del repositorio
 

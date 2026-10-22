@@ -97,13 +97,25 @@ la misma cuenta para comprobar el bloqueo pesimista:
 
 ### 2.4 Cobertura de código (JaCoCo)
 
-La cobertura de los 67 tests de `atm-service` se midió con JaCoCo (`jacoco-maven-plugin` 0.8.11),
-ejecutando `mvn clean verify` en esa carpeta. El reporte HTML queda en
-`atm-service/target/site/jacoco/index.html` (no se versiona, porque `target/` está ignorado).
+La cobertura de los tests se midió con JaCoCo (`jacoco-maven-plugin` 0.8.11), ejecutando
+`mvn clean verify` en cada proyecto. Los reportes HTML quedan en
+`atm-service/target/site/jacoco/index.html` y `atm-console/target/site/jacoco/index.html` (no se
+versionan, porque `target/` está ignorado).
+
+**Exclusiones.** Ambos `pom.xml` excluyen clases del cálculo (sección `excludes` del plugin):
+
+| Proyecto | Clases excluidas |
+|---|---|
+| `atm-service` | `AtmServiceApplication` (solo contiene el `main` que arranca Spring) |
+| `atm-console` | el paquete `client` (`HttpAtmClient` y sus excepciones), el paquete `config` y `App` (el `main`) |
+
+Además, `lombok.config` (`lombok.addLombokGeneratedAnnotation = true`) en ambos proyectos hace que
+JaCoCo ignore el código que genera Lombok, por lo que los DTO no aparecen en los reportes.
+
+#### `atm-service` (67 tests, 16 clases analizadas)
 
 | Paquete | Líneas | Ramas | Instrucciones |
 |---|---|---|---|
-| `com.servicio.atm` (arranque) | 33,3 % (1/3) | sin ramas | 37,5 % |
 | `app.service.impl` | 100 % (52/52) | 100 % (10/10) | 100 % |
 | `domain.entity` | 100 % (11/11) | 100 % (6/6) | 100 % |
 | `domain.exception` | 100 % (8/8) | sin ramas | 100 % |
@@ -112,15 +124,25 @@ ejecutando `mvn clean verify` en esa carpeta. El reporte HTML queda en
 | `infra.in` (`GlobalExceptionHandler`) | 100 % (20/20) | sin ramas | 100 % |
 | `infra.in.controller` | 100 % (26/26) | sin ramas | 100 % |
 | `infra.out.logging` | 100 % (11/11) | 100 % (6/6) | 100 % |
-| **Total** | **98,5 % (135/137)** | **100 % (22/22)** | **99,1 %** |
+| **Total** | **100 % (134/134)** | **100 % (22/22)** | **100 %** |
 
-Las únicas dos líneas sin cubrir son las del método `main` de `AtmServiceApplication`, que solo
-arranca Spring y no se ejecuta en los tests (el test `AtmServiceApplicationTest` levanta el contexto
-sin pasar por `main`).
+#### `atm-console` (45 tests, 9 clases analizadas)
 
-Alcance: la tabla de arriba mide solo `atm-service`; `atm-console` también tiene JaCoCo configurado y su
-reporte se genera con `mvn clean verify` en `atm-console/target/site/jacoco/index.html`. Tampoco hay
-un umbral mínimo que haga fallar la compilación: el reporte es informativo.
+| Paquete | Líneas | Ramas | Instrucciones |
+|---|---|---|---|
+| `cli` | 88,9 % (48/54) | 100 % (14/14) | 86,4 % |
+| `cli.impl` (los cuatro comandos) | 100 % (33/33) | 100 % (4/4) | 100 % |
+| `util` | 100 % (15/15) | 100 % (10/10) | 100 % |
+| **Total** | **94,1 % (96/102)** | **100 % (28/28)** | **92,9 %** |
+
+Las seis líneas sin cubrir están en `ConsolePrinter`: el método `forSystemStreams()` y el método
+privado `stream(...)`, que conectan la salida con la consola real (`FileDescriptor.out` y
+`FileDescriptor.err`). Se ejercitan al ejecutar la aplicación, como en las
+[pruebas de punta a punta](#3-pruebas-de-punta-a-punta-con-la-consola) y en la
+[verificación de acentos](#38-acentos-en-la-consola-de-windows-cmd), pero no desde los tests
+unitarios. La elección de la codificación (`resolveCharset`) sí está cubierta por `ConsolePrinterTest`.
+
+No hay un umbral mínimo que haga fallar la compilación: los reportes son informativos.
 
 ## 3. Pruebas de punta a punta con la consola
 

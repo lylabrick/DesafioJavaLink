@@ -27,7 +27,7 @@ La solución son dos proyectos Maven independientes en el mismo repositorio, com
 | H2 en memoria + `data.sql` | El enunciado permite persistir en memoria. H2 es una base relacional real: soporta transacciones y `SELECT ... FOR UPDATE`, que es lo que da la garantía de concurrencia. Cambiar a otra base solo requiere cambiar el datasource. |
 | springdoc-openapi | Documenta la API en Swagger UI desde las anotaciones de los controllers. |
 | Logback (incluido en Spring Boot) | Escribe el log transaccional en un archivo de texto con rotación, sin código propio de E/S. |
-| JaCoCo (`jacoco-maven-plugin` 0.8.11) | Mide qué parte del código ejercitan los tests de `atm-service` y de `atm-console`. El reporte HTML se genera con `mvn clean verify` en `target/site/jacoco/index.html` de cada proyecto. No fija un umbral mínimo. Resultados en [las evidencias](EVIDENCIAS_PRUEBAS.md#24-cobertura-de-código-jacoco). |
+| JaCoCo (`jacoco-maven-plugin` 0.8.11) | Mide qué parte del código ejercitan los tests de `atm-service` y de `atm-console`. El reporte HTML se genera con `mvn clean verify` en `target/site/jacoco/index.html` de cada proyecto. Excluye del cálculo las clases de arranque y configuración (`AtmServiceApplication`; en la consola, `App` y los paquetes `client` y `config`) y el código que genera Lombok. No fija un umbral mínimo. Resultados en [las evidencias](EVIDENCIAS_PRUEBAS.md#24-cobertura-de-código-jacoco). |
 
 ### 2.2 Capas
 
