@@ -22,7 +22,8 @@ atm saldo <tarjeta> <cuenta>
 ```
 com.console.atm
 ├── App                    punto de entrada
-├── cli/                   comandos (patrón Command), despachador y salida por consola
+├── cli/                   interfaz Command, despachador y salida por consola
+│   └── impl/              los cuatro comandos (login, extraer, depositar, saldo)
 ├── client/                AtmClient y su implementación HTTP (HttpURLConnection + Jackson)
 ├── dto/                   mensajes de request/response del servicio (Lombok)
 ├── config/                configuración de conexión

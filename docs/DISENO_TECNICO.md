@@ -27,6 +27,7 @@ La solución son dos proyectos Maven independientes en el mismo repositorio, com
 | H2 en memoria + `data.sql` | El enunciado permite persistir en memoria. H2 es una base relacional real: soporta transacciones y `SELECT ... FOR UPDATE`, que es lo que da la garantía de concurrencia. Cambiar a otra base solo requiere cambiar el datasource. |
 | springdoc-openapi | Documenta la API en Swagger UI desde las anotaciones de los controllers. |
 | Logback (incluido en Spring Boot) | Escribe el log transaccional en un archivo de texto con rotación, sin código propio de E/S. |
+| JaCoCo (`jacoco-maven-plugin` 0.8.11) | Mide qué parte del código ejercitan los tests de `atm-service` y de `atm-console`. El reporte HTML se genera con `mvn clean verify` en `target/site/jacoco/index.html` de cada proyecto. No fija un umbral mínimo. Resultados en [las evidencias](EVIDENCIAS_PRUEBAS.md#24-cobertura-de-código-jacoco). |
 
 ### 2.2 Capas
 
@@ -262,8 +263,3 @@ Decisiones:
 - **Mensajes de error** más precisos: separar tarjeta inexistente, cuenta no asociada y CBU
   inexistente.
 - **Límites operativos** configurables (extracción máxima diaria, por operación).
-- **Medición de cobertura con JaCoCo**. Hoy se informa cuántos tests hay y que pasan, pero no qué
-  parte del código ejercitan. Se propone agregar el plugin `jacoco-maven-plugin` a ambos proyectos
-  para generar el reporte de cobertura (`target/site/jacoco/index.html`) al correr `mvn verify`, y
-  fijar un umbral mínimo (por ejemplo, 80 % de líneas en servicios y dominio) que haga fallar la
-  compilación si baja. El reporte se enlazaría desde el documento de evidencias.

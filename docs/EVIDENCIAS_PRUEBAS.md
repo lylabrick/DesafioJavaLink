@@ -95,6 +95,33 @@ la misma cuenta para comprobar el bloqueo pesimista:
 | Depósitos concurrentes | 100,00 | 8 depósitos de 25,00 | Saldo final **300,00** (no se pierde ninguna actualización) |
 | Mixto | 1000,00 | 4 depósitos de 100,00 y 4 extracciones de 50,00 | Saldo final **1200,00** |
 
+### 2.4 Cobertura de código (JaCoCo)
+
+La cobertura de los 67 tests de `atm-service` se midió con JaCoCo (`jacoco-maven-plugin` 0.8.11),
+ejecutando `mvn clean verify` en esa carpeta. El reporte HTML queda en
+`atm-service/target/site/jacoco/index.html` (no se versiona, porque `target/` está ignorado).
+
+| Paquete | Líneas | Ramas | Instrucciones |
+|---|---|---|---|
+| `com.servicio.atm` (arranque) | 33,3 % (1/3) | sin ramas | 37,5 % |
+| `app.service.impl` | 100 % (52/52) | 100 % (10/10) | 100 % |
+| `domain.entity` | 100 % (11/11) | 100 % (6/6) | 100 % |
+| `domain.exception` | 100 % (8/8) | sin ramas | 100 % |
+| `domain.model.out` | 100 % (1/1) | sin ramas | 100 % |
+| `infra.config` | 100 % (5/5) | sin ramas | 100 % |
+| `infra.in` (`GlobalExceptionHandler`) | 100 % (20/20) | sin ramas | 100 % |
+| `infra.in.controller` | 100 % (26/26) | sin ramas | 100 % |
+| `infra.out.logging` | 100 % (11/11) | 100 % (6/6) | 100 % |
+| **Total** | **98,5 % (135/137)** | **100 % (22/22)** | **99,1 %** |
+
+Las únicas dos líneas sin cubrir son las del método `main` de `AtmServiceApplication`, que solo
+arranca Spring y no se ejecuta en los tests (el test `AtmServiceApplicationTest` levanta el contexto
+sin pasar por `main`).
+
+Alcance: la tabla de arriba mide solo `atm-service`; `atm-console` también tiene JaCoCo configurado y su
+reporte se genera con `mvn clean verify` en `atm-console/target/site/jacoco/index.html`. Tampoco hay
+un umbral mínimo que haga fallar la compilación: el reporte es informativo.
+
 ## 3. Pruebas de punta a punta con la consola
 
 Procedimiento:
