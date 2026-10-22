@@ -1,12 +1,12 @@
 package com.console.atm;
 
-import com.console.atm.cli.BalanceCommand;
+import com.console.atm.cli.impl.BalanceCommand;
 import com.console.atm.cli.Command;
 import com.console.atm.cli.CommandDispatcher;
 import com.console.atm.cli.ConsolePrinter;
-import com.console.atm.cli.DepositCommand;
-import com.console.atm.cli.ExtractCommand;
-import com.console.atm.cli.LoginCommand;
+import com.console.atm.cli.impl.DepositCommand;
+import com.console.atm.cli.impl.ExtractCommand;
+import com.console.atm.cli.impl.LoginCommand;
 import com.console.atm.client.AtmClient;
 import com.console.atm.client.HttpAtmClient;
 import com.console.atm.config.AtmConfig;

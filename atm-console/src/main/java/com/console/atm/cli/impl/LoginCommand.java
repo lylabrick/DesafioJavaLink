@@ -1,5 +1,8 @@
-package com.console.atm.cli;
+package com.console.atm.cli.impl;
 
+import com.console.atm.cli.Command;
+import com.console.atm.cli.CommandFailedException;
+import com.console.atm.cli.ConsolePrinter;
 import com.console.atm.client.AtmApiException;
 import com.console.atm.client.AtmClient;
 import lombok.RequiredArgsConstructor;

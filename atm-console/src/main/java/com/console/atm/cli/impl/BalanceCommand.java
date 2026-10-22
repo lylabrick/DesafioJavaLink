@@ -1,5 +1,7 @@
-package com.console.atm.cli;
+package com.console.atm.cli.impl;
 
+import com.console.atm.cli.Command;
+import com.console.atm.cli.ConsolePrinter;
 import com.console.atm.client.AtmClient;
 import com.console.atm.util.AmountFormatter;
 import lombok.RequiredArgsConstructor;

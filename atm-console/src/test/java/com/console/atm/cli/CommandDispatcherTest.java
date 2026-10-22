@@ -1,5 +1,9 @@
 package com.console.atm.cli;
 
+import com.console.atm.cli.impl.BalanceCommand;
+import com.console.atm.cli.impl.DepositCommand;
+import com.console.atm.cli.impl.ExtractCommand;
+import com.console.atm.cli.impl.LoginCommand;
 import com.console.atm.client.AtmApiException;
 import com.console.atm.client.AtmClient;
 import com.console.atm.client.AtmUnavailableException;

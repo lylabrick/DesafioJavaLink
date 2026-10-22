@@ -1,5 +1,6 @@
 package com.console.atm.cli;
 
+import com.console.atm.cli.impl.DepositCommand;
 import com.console.atm.client.AtmClient;
 import com.console.atm.dto.TransactionResponse;
 import org.junit.Before;
