@@ -17,13 +17,13 @@ Desde esta carpeta, en PowerShell o `cmd`:
 .\atm.bat saldo <tarjeta> <cuenta>
 ```
 
-En Git Bash o Linux/macOS se reemplaza `.\atm.bat` por `./atm.sh`. Resumen por terminal:
+En Git Bash se reemplaza `.\atm.bat` por `./atm.bat`. Resumen por terminal:
 
 | Terminal | Cómo se invoca |
 |---|---|
-| PowerShell o `cmd` | `.\atm.bat login <tarjeta>` |
-| Git Bash | `./atm.bat login <tarjeta>` o `./atm.sh login <tarjeta>` |
-| Linux / macOS | `./atm.sh login <tarjeta>` |
+| PowerShell | `.\atm.bat login <tarjeta>` |
+| `cmd` | `atm login <tarjeta>` o `.\atm.bat login <tarjeta>` |
+| Git Bash | `./atm.bat login <tarjeta>` |
 | Cualquiera | `java -jar target/atm-console.jar login <tarjeta>` |
 
 Más detalle y problemas frecuentes en el [README del repositorio](../README.md#3-ejecutar-la-aplicación-de-consola).
