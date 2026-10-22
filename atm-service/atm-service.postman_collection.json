@@ -1,0 +1,235 @@
+{
+  "info": {
+    "name": "ATM Service",
+    "description": "Pruebas manuales de atm-service (localhost:8080). Datos de prueba de atm-service/src/main/resources/data.sql. Los saldos cambian con cada operacion y vuelven a su valor inicial al reiniciar el servicio.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" }
+  ],
+  "item": [
+    {
+      "name": "Login",
+      "item": [
+        {
+          "name": "Login OK (Ana)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200', function () { pm.response.to.have.status(200); });",
+            "pm.test('success = true', function () { pm.expect(pm.response.json().success).to.eql(true); });"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"cardNumber\": \"4000111122223333\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/login", "host": ["{{baseUrl}}"], "path": ["api", "login"] }
+          }
+        },
+        {
+          "name": "Login tarjeta inactiva (Carla)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200', function () { pm.response.to.have.status(200); });",
+            "pm.test('success = false', function () { pm.expect(pm.response.json().success).to.eql(false); });"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"cardNumber\": \"4000999988887777\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/login", "host": ["{{baseUrl}}"], "path": ["api", "login"] }
+          }
+        },
+        {
+          "name": "Login tarjeta inexistente",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200', function () { pm.response.to.have.status(200); });",
+            "pm.test('success = false', function () { pm.expect(pm.response.json().success).to.eql(false); });"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"cardNumber\": \"4000000000000000\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/login", "host": ["{{baseUrl}}"], "path": ["api", "login"] }
+          }
+        },
+        {
+          "name": "Login body invalido (400)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('400', function () { pm.response.to.have.status(400); });"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/login", "host": ["{{baseUrl}}"], "path": ["api", "login"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Saldo",
+      "item": [
+        {
+          "name": "Saldo OK (Ana, cuenta 1)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200', function () { pm.response.to.have.status(200); });",
+            "pm.test('trae balance', function () { pm.expect(pm.response.json()).to.have.property('balance'); });"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"cardNumber\": \"4000111122223333\",\n  \"accountNumber\": \"0000000001\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/accounts/balance", "host": ["{{baseUrl}}"], "path": ["api", "accounts", "balance"] }
+          }
+        },
+        {
+          "name": "Saldo cuenta no asociada a la tarjeta (404)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('404', function () { pm.response.to.have.status(404); });"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"cardNumber\": \"4000111122223333\",\n  \"accountNumber\": \"0000000002\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/accounts/balance", "host": ["{{baseUrl}}"], "path": ["api", "accounts", "balance"] }
+          }
+        },
+        {
+          "name": "Saldo body invalido (400)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('400', function () { pm.response.to.have.status(400); });"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"cardNumber\": \"\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/accounts/balance", "host": ["{{baseUrl}}"], "path": ["api", "accounts", "balance"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Extraccion",
+      "item": [
+        {
+          "name": "Extraer 100 OK (Ana, cuenta 1)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200', function () { pm.response.to.have.status(200); });",
+            "pm.test('trae amount y balance', function () {",
+            "  var body = pm.response.json();",
+            "  pm.expect(body).to.have.property('amount');",
+            "  pm.expect(body).to.have.property('balance');",
+            "});"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"cardNumber\": \"4000111122223333\",\n  \"accountNumber\": \"0000000001\",\n  \"amount\": 100.00\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/transactions/extract", "host": ["{{baseUrl}}"], "path": ["api", "transactions", "extract"] }
+          }
+        },
+        {
+          "name": "Extraer con saldo insuficiente (422)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('422', function () { pm.response.to.have.status(422); });"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"cardNumber\": \"4000555566668888\",\n  \"accountNumber\": \"0000000008\",\n  \"amount\": 99999.00\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/transactions/extract", "host": ["{{baseUrl}}"], "path": ["api", "transactions", "extract"] }
+          }
+        },
+        {
+          "name": "Extraer importe 0 (400)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('400', function () { pm.response.to.have.status(400); });"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"cardNumber\": \"4000111122223333\",\n  \"accountNumber\": \"0000000001\",\n  \"amount\": 0\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/transactions/extract", "host": ["{{baseUrl}}"], "path": ["api", "transactions", "extract"] }
+          }
+        },
+        {
+          "name": "Extraer con tarjeta inactiva (403)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('403', function () { pm.response.to.have.status(403); });"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"cardNumber\": \"4000999988887777\",\n  \"accountNumber\": \"0000000003\",\n  \"amount\": 10.00\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/transactions/extract", "host": ["{{baseUrl}}"], "path": ["api", "transactions", "extract"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Deposito",
+      "item": [
+        {
+          "name": "Depositar en cuenta propia (Ana, CBU 1)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200', function () { pm.response.to.have.status(200); });",
+            "pm.test('trae balance', function () { pm.expect(pm.response.json()).to.have.property('balance'); });"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"cardNumber\": \"4000111122223333\",\n  \"cbu\": \"0170000000000000000001\",\n  \"amount\": 50.00\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/transactions/deposit", "host": ["{{baseUrl}}"], "path": ["api", "transactions", "deposit"] }
+          }
+        },
+        {
+          "name": "Depositar en cuenta AJENA (Ana -> Diego, CBU 5)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200', function () { pm.response.to.have.status(200); });",
+            "pm.test('trae balance', function () { pm.expect(pm.response.json()).to.have.property('balance'); });"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"cardNumber\": \"4000111122223333\",\n  \"cbu\": \"0170000000000000000005\",\n  \"amount\": 100.50\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/transactions/deposit", "host": ["{{baseUrl}}"], "path": ["api", "transactions", "deposit"] }
+          }
+        },
+        {
+          "name": "Depositar a CBU inexistente (404)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('404', function () { pm.response.to.have.status(404); });"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"cardNumber\": \"4000111122223333\",\n  \"cbu\": \"9999999999999999999999\",\n  \"amount\": 10.00\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/transactions/deposit", "host": ["{{baseUrl}}"], "path": ["api", "transactions", "deposit"] }
+          }
+        },
+        {
+          "name": "Depositar con tarjeta inexistente (404)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('404', function () { pm.response.to.have.status(404); });"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"cardNumber\": \"4000000000000000\",\n  \"cbu\": \"0170000000000000000001\",\n  \"amount\": 10.00\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/transactions/deposit", "host": ["{{baseUrl}}"], "path": ["api", "transactions", "deposit"] }
+          }
+        },
+        {
+          "name": "Depositar con tarjeta inactiva (403)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('403', function () { pm.response.to.have.status(403); });"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"cardNumber\": \"4000999988887777\",\n  \"cbu\": \"0170000000000000000001\",\n  \"amount\": 10.00\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/transactions/deposit", "host": ["{{baseUrl}}"], "path": ["api", "transactions", "deposit"] }
+          }
+        }
+      ]
+    }
+  ]
+}
