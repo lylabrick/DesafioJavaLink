@@ -141,6 +141,10 @@ usuario.
 | Codificación de salida | `ConsolePrinter.forSystemStreams()` escribe con la página de códigos de la consola cuando Java 8 la soporta (por ejemplo `cp850`), y en UTF-8 si la consola está en UTF-8 (`cp65001`, que Java 8 no reconoce) o si la salida está redirigida. Así `Depósito exitoso` se ve bien en `cmd`. Se detectó y corrigió durante las pruebas ([hallazgo H1](EVIDENCIAS_PRUEBAS.md#hallazgos)). |
 | Formato `$ 99999,99` | `AmountFormatter` usa coma decimal y 2 decimales, como el ejemplo del enunciado. |
 
+Cada operación es una clase que implementa `Command`; los comandos dependen de la interfaz `AtmClient`, no de HTTP.
+
+![Diagrama de clases de los comandos](img/diagrama-clases-comandos.svg)
+
 ## 4. Cumplimiento de requisitos funcionales
 
 ### 4.1 Aplicación de consola
