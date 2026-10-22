@@ -21,6 +21,15 @@ public class ErrorResponse {
     private List<String> details;
     private LocalDateTime timestamp;
 
+    /**
+     * Crea una respuesta de error con la fecha y hora actuales.
+     *
+     * @param status  codigo HTTP
+     * @param error   descripcion estandar del codigo HTTP
+     * @param message mensaje para el cliente
+     * @param details detalles adicionales (por ejemplo, errores de validacion por campo)
+     * @return la respuesta de error
+     */
     public static ErrorResponse of(int status, String error, String message, List<String> details) {
         return new ErrorResponse(status, error, message, details, LocalDateTime.now());
     }

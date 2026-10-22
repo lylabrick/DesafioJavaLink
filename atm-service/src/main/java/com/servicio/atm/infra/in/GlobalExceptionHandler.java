@@ -3,12 +3,16 @@ package com.servicio.atm.infra.in;
 import com.servicio.atm.domain.exception.CuentaNoEncontradaException;
 import com.servicio.atm.domain.exception.SaldoInsuficienteException;
 import com.servicio.atm.domain.exception.TarjetaInactivaException;
+import com.servicio.atm.domain.exception.TarjetaNoEncontradaException;
 import com.servicio.atm.domain.model.out.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -47,22 +51,47 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage(), Collections.emptyList());
     }
 
+    /** 404: la cuenta no existe o no corresponde a la tarjeta indicada. */
+    @ExceptionHandler(CuentaNoEncontradaException.class)
+    public ResponseEntity<ErrorResponse> handleCuentaNoEncontrada(CuentaNoEncontradaException ex) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage(), Collections.emptyList());
+    }
+
     /** 403: la tarjeta existe pero esta inactiva. */
     @ExceptionHandler(TarjetaInactivaException.class)
     public ResponseEntity<ErrorResponse> handleTarjetaInactiva(TarjetaInactivaException ex) {
         return build(HttpStatus.FORBIDDEN, ex.getMessage(), Collections.emptyList());
     }
 
-    /** 404: no existe la relacion tarjeta-cuenta. */
-    @ExceptionHandler(CuentaNoEncontradaException.class)
-    public ResponseEntity<ErrorResponse> handleCuentaNoEncontrada(CuentaNoEncontradaException ex) {
+    /** 404: el numero de tarjeta no existe. */
+    @ExceptionHandler(TarjetaNoEncontradaException.class)
+    public ResponseEntity<ErrorResponse> handleTarjetaNoEncontrada(TarjetaNoEncontradaException ex) {
         return build(HttpStatus.NOT_FOUND, ex.getMessage(), Collections.emptyList());
+    }
+
+    /** 405: el metodo HTTP no esta permitido en ese endpoint (por ejemplo GET en lugar de POST). */
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
+        return build(HttpStatus.METHOD_NOT_ALLOWED, "Metodo HTTP no permitido para este recurso", Collections.emptyList());
+    }
+
+    /** 415: el Content-Type de la solicitud no es soportado (se espera application/json). */
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex) {
+        return build(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Content-Type no soportado, se espera application/json", Collections.emptyList());
     }
 
     /** 422: la operacion es valida pero el saldo no alcanza. */
     @ExceptionHandler(SaldoInsuficienteException.class)
     public ResponseEntity<ErrorResponse> handleSaldoInsuficiente(SaldoInsuficienteException ex) {
         return build(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), Collections.emptyList());
+    }
+
+    /** 503: no se pudo obtener el bloqueo de la cuenta a tiempo; es un fallo temporal, se puede reintentar. */
+    @ExceptionHandler(PessimisticLockingFailureException.class)
+    public ResponseEntity<ErrorResponse> handleLockFailure(PessimisticLockingFailureException ex) {
+        log.warn("No se pudo obtener el bloqueo de la cuenta", ex);
+        return build(HttpStatus.SERVICE_UNAVAILABLE, "El servicio esta ocupado, intente nuevamente", Collections.emptyList());
     }
 
     /** 500: cualquier error no previsto. Se registra completo en el log, pero al cliente no se le envia la traza. */

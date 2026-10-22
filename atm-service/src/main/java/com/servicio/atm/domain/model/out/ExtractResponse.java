@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+/**
+ * Respuesta de la extraccion: importe retirado y saldo resultante de la cuenta.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

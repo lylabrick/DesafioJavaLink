@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+/**
+ * Respuesta de la consulta de saldo.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

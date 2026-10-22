@@ -5,6 +5,9 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
+/**
+ * Datos para consultar el saldo de una cuenta.
+ */
 @Data
 @NoArgsConstructor
 public class BalanceRequest {

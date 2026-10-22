@@ -9,6 +9,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
+/**
+ * Datos para depositar efectivo: tarjeta con la que se opera, CBU de la cuenta
+ * destino (que puede ser de otra persona) e importe, con hasta dos decimales.
+ */
 @Data
 @NoArgsConstructor
 public class DepositRequest {

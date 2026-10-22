@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Configuracion de logging solo para los tests. Logback la prioriza sobre logback-spring.xml.
+    El log transaccional de los tests va a target/test-logs (se borra con "mvn clean") para no
+    mezclar datos de prueba con logs/transacciones.log, que es el registro de auditoria real.
+-->
+<configuration>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="TRANSACCIONES_TEST_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>target/test-logs/transacciones-test.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} | %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="TRANSACCIONES" level="INFO" additivity="false">
+        <appender-ref ref="TRANSACCIONES_TEST_FILE"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

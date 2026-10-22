@@ -9,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
+/**
+ * Consulta de saldo en modo solo lectura: no bloquea la cuenta.
+ */
 @Service
 public class BalanceServiceImpl implements BalanceService {
 

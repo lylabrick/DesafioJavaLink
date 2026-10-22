@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+/**
+ * Respuesta del deposito: importe acreditado y saldo resultante de la cuenta.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

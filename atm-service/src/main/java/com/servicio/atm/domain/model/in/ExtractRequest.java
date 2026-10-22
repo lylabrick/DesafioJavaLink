@@ -9,6 +9,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
+/**
+ * Datos para extraer efectivo: tarjeta, cuenta e importe, con hasta dos decimales.
+ */
 @Data
 @NoArgsConstructor
 public class ExtractRequest {
